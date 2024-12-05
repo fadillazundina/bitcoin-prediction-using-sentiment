@@ -19,17 +19,39 @@ def scale_data(df):
 
     X, y = np.array(X), np.array(y)
 
-    return X, y, scaler 
+    return X, y, scaler     
 
 def inverse_transform(scaler, predictions):
     predictions = predictions.reshape(-1, 1)
     inverse_predictions = scaler.inverse_transform(np.concatenate([np.zeros((len(predictions), scaler.n_features_in_ - 1)), predictions], axis=1))
     return inverse_predictions[:, -1]
 
-def lineplot(y_test, y_pred):
-    # Plot data asli dan prediksi setelah inverse transform
+def inverse_transform_new(scaler, predictions):
+    predictions = predictions.reshape(-1, 1)
+    inverse_predictions = scaler.inverse_transform(
+        np.concatenate([np.zeros((len(predictions), scaler.n_features_in_ - 1)), predictions], axis=1)
+    )
+    return inverse_predictions[:, -1]
+
+def lineplot(y_test, y_pred, y_pred_new=None):
+    """
+    Membuat plot data asli (y_test), prediksi (y_pred), 
+    dan prediksi untuk data baru (y_pred_new) jika tersedia.
+    
+    Args:
+        y_test (array-like): Data asli (data uji).
+        y_pred (array-like): Prediksi untuk data uji.
+        y_pred_new (array-like, optional): Prediksi untuk data baru. Default None.
+    """
+    # Plot data asli (y_test) dan prediksi (y_pred)
     plt.plot(y_test, color='blue', label='Real Close Price')
     plt.plot(y_pred, color='red', label='Predicted Close Price')
+
+    # Plot prediksi untuk data baru jika diberikan
+    if y_pred_new is not None:
+        plt.plot(range(len(y_test), len(y_test) + len(y_pred_new)), y_pred_new, 
+                 color='green', linestyle='--', label='New Data Prediction')
+
     plt.title('Close Price Prediction')
     plt.xlabel('Time')
     plt.ylabel('Price')
