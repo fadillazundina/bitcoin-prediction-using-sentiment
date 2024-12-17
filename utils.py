@@ -19,18 +19,11 @@ def scale_data(df):
 
     X, y = np.array(X), np.array(y)
 
-    return X, y, scaler     
+    return X, y, scaler 
 
 def inverse_transform(scaler, predictions):
     predictions = predictions.reshape(-1, 1)
     inverse_predictions = scaler.inverse_transform(np.concatenate([np.zeros((len(predictions), scaler.n_features_in_ - 1)), predictions], axis=1))
-    return inverse_predictions[:, -1]
-
-def inverse_transform_new(scaler, predictions):
-    predictions = predictions.reshape(-1, 1)
-    inverse_predictions = scaler.inverse_transform(
-        np.concatenate([np.zeros((len(predictions), scaler.n_features_in_ - 1)), predictions], axis=1)
-    )
     return inverse_predictions[:, -1]
 
 def lineplot(y_test, y_pred, y_pred_new=None):
